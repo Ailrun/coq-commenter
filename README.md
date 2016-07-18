@@ -13,13 +13,18 @@ _In any case of problem, please contact me via [issue][issue]_
 
 ## How to use ##
 
-Copy `coq-commenter.el` to your `.emacs.d` directory (all any equivalent), and add following codes in your `.emacs` or `.emacs.d/init.el`
+First, install dependencies. This .el file requires [s][s] and [dash][dash] emacs packages (you can install them via `package-install`)
+
+Then, Copy `coq-commenter.el` to your `.emacs.d` directory (all any equivalent), and add following codes in your `.emacs` or `.emacs.d/init.el`
 
 ```
 (load "coq-commenter-path")
 ```
 
-where `"coq-commenter-path"` be the real path that you place `coq-commenter.el`
+where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` in.
+
+[s]: https://github.com/magnars/s.el
+[dash]: https://github.com/magnars/dash.el
 
 ## Commands ##
 
@@ -50,7 +55,27 @@ where `"coq-commenter-path"` be the real path that you place `coq-commenter.el`
 You can change these key by using
 `customize-group` `coq-commentor`
 
-or by modifying front part of `coq-commenter.el` file.
+or by modifying default values of `defcustom` from
+
+```
+;;
+;;
+;; Start of Key Setting
+;;
+;;
+```
+
+to
+
+```
+;;
+;;
+;; End of Key Setting
+;;
+;;
+```
+
+of `coq-commenter.el` file.
 
 ## Author ##
 
