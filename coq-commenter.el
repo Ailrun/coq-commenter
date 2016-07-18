@@ -20,6 +20,75 @@
 ;; (require 'f)
 ;; (defconst coq-commenter-file (f-this-file))
 
+(require 's)
+(require 'dash)
+
+(defvar comment-proof-in-region-key-old "")
+
+(defvar comment-proof-in-buffer-key-old "")
+
+(defvar comment-proof-to-cursor-key-old "")
+
+(defvar uncomment-proof-in-region-key-old "")
+
+(defvar uncomment-proof-in-buffer-key-old "")
+
+(defvar uncomment-proof-to-cursor-key-old "")
+
+(defun comment-proof-in-region-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd comment-proof-in-region-key-old))
+		 (setq comment-proof-in-region-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (comment-proof-in-region)))))
+
+(defun comment-proof-in-buffer-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd comment-proof-in-buffer-key-old))
+		 (setq comment-proof-in-buffer-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (comment-proof-in-buffer)))))
+
+(defun comment-proof-to-cursor-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd comment-proof-to-cursor-key-old))
+		 (setq comment-proof-to-cursor-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (comment-proof-to-cursor)))))
+
+(defun uncomment-proof-in-region-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd uncomment-proof-in-region-key-old))
+		 (setq uncomment-proof-in-region-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (uncomment-proof-in-region)))))
+
+(defun uncomment-proof-in-buffer-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd uncomment-proof-in-buffer-key-old))
+		 (setq uncomment-proof-in-buffer-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (uncomment-proof-in-buffer)))))
+
+(defun uncomment-proof-to-cursor-key-set (symn k)
+  "set custom value"
+  (progn (global-unset-key (kbd uncomment-proof-to-cursor-key-old))
+		 (setq uncomment-proof-to-cursor-key-old k)
+		 (global-set-key (kbd k)
+						 (lambda ()
+						   (interactive)
+						   (uncomment-proof-to-cursor)))))
+
 (defgroup coq-commenter nil
   "coq-commenter customization group"
   :group 'convenience)
@@ -32,64 +101,33 @@
 
 (defcustom comment-proof-in-region-key "C-;"
   "key for comment-proof-in-region command"
-  )
+  :set 'comment-proof-in-region-key-set
+  :initialize 'custom-initialize-set)
 
-
-(defcustom comment-proof-in-buffer-key nil
+(defcustom comment-proof-in-buffer-key ""
   "key for comment-proof-in-buffer command"
-  )
+  :set 'comment-proof-in-buffer-key-set
+  :initialize 'custom-initialize-set)
 
 (defcustom comment-proof-to-cursor-key "C-x C-;"
   "key for comment-proof-to-cursor command"
-  )
+  :set 'comment-proof-to-cursor-key-set
+  :initialize 'custom-initialize-set)
 
 (defcustom uncomment-proof-in-region-key "C-'"
   "key for uncomment-proof-in-region command"
-  )
+  :set 'uncomment-proof-in-region-key-set
+  :initialize 'custom-initialize-set)
 
 (defcustom uncomment-proof-in-buffer-key "C-x C-'"
   "key for uncomment-proof-in-buffer command"
-  )
+  :set 'uncomment-proof-in-buffer-key-set
+  :initialize 'custom-initialize-set)
 
-(defcustom uncomment-proof-to-cursor-key nil
+(defcustom uncomment-proof-to-cursor-key ""
   "key for uncomment-proof-to-cursor command"
-  )
-;; (global-set-key (kbd "C-<f2>")
-;; 				(lambda ()
-;; 				  (interactive)
-;; 				  (load-file coq-commenter-file)))
-
-(global-set-key (kbd comment-proof-in-region-key)
-				(lambda ()
-				  (interactive)
-				  (comment-proof-in-region)))
-
-(global-set-key (kbd comment-proof-in-buffer-key)
- 				(lambda ()
- 				  (interactive)
- 				  (comment-proof-in-buffer)))
-
-(global-set-key (kbd comment-proof-to-cursor-key)
-				(lambda ()
-				  (interactive)
-				  (comment-proof-to-cursor)))
-
-(global-set-key (kbd uncomment-proof-in-region-key)
-				(lambda ()
-				  (interactive)
-				  (uncomment-proof-in-region)))
-
-(global-set-key (kbd uncomment-proof-to-cursor-key)
-				(lambda ()
-				  (interactive)
-				  (uncomment-proof-to-cursor)))
-
-(global-set-key (kbd uncomment-proof-in-buffer-key)
-				(lambda ()
-				  (interactive)
-				  (uncomment-proof-in-buffer)))
-
-
+  :set 'uncomment-proof-to-cursor-key-set
+  :initialize 'custom-initialize-set)
 
 ;;
 ;;
@@ -100,9 +138,6 @@
 (defcustom added-keyword-indent 2
   "Indentation of added keyword(default is Admit)."
   )
-
-(require 's)
-(require 'dash)
 
 ;; Common Codes
 
