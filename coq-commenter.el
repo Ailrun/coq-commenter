@@ -17,60 +17,85 @@
 ;; "C-'" uncomment-proof-in-region
 ;; "C-x C-'" uncomment-proof-in-buffer
 
-(require 'f)
-(defconst coq-commenter-file (f-this-file))
-;; (global-set-key (kbd "C-<f2>")
-;; 				(lambda ()
-;; 				  (interactive)
-;; 				  (load-file coq-commenter-file)))
-
-(global-set-key (kbd "C-;")
-				(lambda ()
-				  (interactive)
-				  (comment-proof-in-region)))
-
-;; (global-set-key (kbd "C-c C-;")
-;; 				(lambda ()
-;; 				  (interactive)
-;; 				  (comment-proof-in-buffer)))
-
-(global-set-key (kbd "C-x C-;")
-				(lambda ()
-				  (interactive)
-				  (comment-proof-to-cursor)))
-
-(global-set-key (kbd "C-'")
-				(lambda ()
-				  (interactive)
-				  (uncomment-proof-in-region)))
-
-(global-set-key (kbd "C-x C-'")
-				(lambda ()
-				  (interactive)
-				  (uncomment-proof-in-buffer)))
+;; (require 'f)
+;; (defconst coq-commenter-file (f-this-file))
 
 (defgroup coq-commenter nil
   "coq-commenter customization group"
   :group 'convenience)
 
-;; (defcustom commenting-start-key "Proof"
-;;   "Starting keyword for section of commenting.")
+;;
+;;
+;; Start of Key Setting
+;;
+;;
 
-;; (defcustom commenting-start "Proof"
-;;   "Starting keyword for section of commenting.")
+(defcustom comment-proof-in-region-key "C-;"
+  "key for comment-proof-in-region command"
+  )
 
-;; (defcustom commenting-start-regex "Proof"
-;;   "Starting keyword for section of commenting.")
 
-;; (defcustom commenting-end-key "Qed"
-;;   "Ending keyword for section of commenting.")
+(defcustom comment-proof-in-buffer-key nil
+  "key for comment-proof-in-buffer command"
+  )
 
-;; (defcustom commenting-end "Qed"
-;;   "Ending keyword for section of commenting.")
+(defcustom comment-proof-to-cursor-key "C-x C-;"
+  "key for comment-proof-to-cursor command"
+  )
 
-;; (defcustom commenting-end-regex "Qed"
-;;   "Ending keyword for section of commenting.")
+(defcustom uncomment-proof-in-region-key "C-'"
+  "key for uncomment-proof-in-region command"
+  )
 
+(defcustom uncomment-proof-in-buffer-key "C-x C-'"
+  "key for uncomment-proof-in-buffer command"
+  )
+
+(defcustom uncomment-proof-to-cursor-key nil
+  "key for uncomment-proof-to-cursor command"
+  )
+;; (global-set-key (kbd "C-<f2>")
+;; 				(lambda ()
+;; 				  (interactive)
+;; 				  (load-file coq-commenter-file)))
+
+(global-set-key (kbd comment-proof-in-region-key)
+				(lambda ()
+				  (interactive)
+				  (comment-proof-in-region)))
+
+(global-set-key (kbd comment-proof-in-buffer-key)
+ 				(lambda ()
+ 				  (interactive)
+ 				  (comment-proof-in-buffer)))
+
+(global-set-key (kbd comment-proof-to-cursor-key)
+				(lambda ()
+				  (interactive)
+				  (comment-proof-to-cursor)))
+
+(global-set-key (kbd uncomment-proof-in-region-key)
+				(lambda ()
+				  (interactive)
+				  (uncomment-proof-in-region)))
+
+(global-set-key (kbd uncomment-proof-to-cursor-key)
+				(lambda ()
+				  (interactive)
+				  (uncomment-proof-to-cursor)))
+
+(global-set-key (kbd uncomment-proof-in-buffer-key)
+				(lambda ()
+				  (interactive)
+				  (uncomment-proof-in-buffer)))
+
+
+
+;;
+;;
+;; End of Key Setting
+;;
+;;
 
 (defcustom added-keyword-indent 2
   "Indentation of added keyword(default is Admit)."

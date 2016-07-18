@@ -1,0 +1,5 @@
+# emacs temp file
+*~
+
+# emacs compiled elisp
+*.elc
