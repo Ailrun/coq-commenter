@@ -7,7 +7,7 @@
 [Status]: https://img.shields.io/badge/Status-Active-green.svg
 
 Emacs commeting support tools for Coq proof assistance  
-_In any case of problem, please contact me via [issue][issue]
+_In any case of problem, please contact me via [issue][issue]_
 
 [issue]: https://github.com/Ailrun/coq-commenter/issues
 
