@@ -283,7 +283,7 @@
   (s-concat
    coq-proof-start-regex
    "\\(?:\n\\|\\)(" (s-repeat 20 "\\*") "\n"
-   "\\(\\(?:[^*]\\|\\*[^)]\\)*?\\)"
+   "\\(\\(?:[[:print:] \n\r\t]\\)*?\\)"
    coq-proof-end-regex
    "coq-commenter automat-?\\(?:[[:digit:]]*\\)ic"
    "\n" (s-repeat 20 "\\*") ")\n"
