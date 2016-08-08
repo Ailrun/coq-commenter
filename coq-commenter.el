@@ -6,6 +6,7 @@
 ;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; URL: -
+;; Package-Requires: ((dash "2.12.0") (s "1.11.0"))
 
 ;;; Commentary:
 
@@ -326,3 +327,4 @@
   (uncomment-proof-from-to (point-min) (point)))
 
 (provide 'coq-commenter)
+;;; coq-commenter.el ends here
