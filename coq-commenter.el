@@ -16,7 +16,7 @@
 ;; You can automatically start this minor mode with following elisp
 ;; when you use Proof-General
 ;;
-;;  (add-hook 'coq-mode-hook (lambda () (coq-commenter-mode t)))
+;;  (add-hook 'coq-mode-hook 'coq-commenter-mode)
 ;;
 ;; You can set your key with
 ;; 

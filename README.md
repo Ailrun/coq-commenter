@@ -26,7 +26,7 @@ where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` 
 On the other way, when you use [ProofGeneral][ProofGeneral], you can automatically turn on this mode by hooking to coq-mode.
 
 ```
-(add-hook 'coq-mode-hook (lambda () (coq-commenter-mode t)))
+(add-hook 'coq-mode-hook 'coq-commenter-mode)
 ```
 
 [s]: https://github.com/magnars/s.el
