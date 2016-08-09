@@ -260,6 +260,7 @@
 
 (defvar coq-commenter-mode-map (make-sparse-keymap))
 
+;;;###autoload
 (define-minor-mode coq-commenter-mode
   "Commenting support mode for coq proof assistant."
   ;; mode line indicator
