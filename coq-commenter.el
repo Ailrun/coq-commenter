@@ -5,22 +5,43 @@
 ;; Keywords: comment coq proof
 ;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
-;; URL: -
-;; Package-Requires: ((dash "2.12.0") (s "1.11.0"))
+;; URL: http://github.com/ailrun/coq-commenter
+;; Package-Requires: ((dash "2.12.0") (s "1.11.0") (cl-lib "0.5"))
 
 ;;; Commentary:
 
-;; Key settings:
-
-;; "C-c C-k ;" comment-proof-in-region
-;; "C-c C-k C-;" comment-proof-to-cursor
 ;;
-;; "C-c C-k '" uncomment-proof-in-region
-;; "C-c C-k C-'" uncomment-proof-in-buffer
+;; Minor mode for coq
+;; 
+;; You can automatically start this minor mode with following elisp
+;; when you use Proof-General
+;;
+;;  (add-hook 'coq-mode-hook (lambda () (coq-commenter-mode t)))
+;;
+;; You can set your key with
+;; 
+;;  (define-key coq-commenter-mode-map
+;;              (kbd "C-;")
+;;              #'coq-commenter-comment-proof-in-region)
+;;  (define-key coq-commenter-mode-map
+;;              (kbd "C-x C-;")
+;;              #'coq-commenter-comment-proof-to-cursor)
+;;  (define-key coq-commenter-mode-map
+;;              (kbd "C-'")
+;;              #'coq-commenter-uncomment-proof-in-region)
+;;  (define-key coq-commenter-mode-map
+;;              (kbd "C-x C-'")
+;;              #'coq-commenter-uncomment-proof-in-buffer)
+;;
+;; or whatever you want.
+;;
+
+;;; Code:
+(require 'easymenu)
 
 ;; (require 'f)
 ;; (defconst coq-commenter-file (f-this-file))
-;;; Code:
+(require 'cl-lib)
 (require 's)
 (require 'dash)
 
@@ -31,9 +52,9 @@
   nil
   "coq-commenter customization group"
   :prefix "coq-commenter-"
-  :group convenience tools)
+  :group 'convenience)
 
-(defcustom coq-commenter-added-keyword-indent
+(defcustom coq-commenter--added-keyword-indent
   2
   "Indentation of added keyword(like Admitted).")
 
@@ -41,11 +62,13 @@
 
 (defconst coq-commenter--v
   "154303401202")
+
 (defconst coq-commenter--comment
   (s-concat
    "coq-commenter automat"
    coq-commenter--v
    "ic"))
+
 (defconst coq-commenter--comment-regex
   (s-concat
    "coq-commenter automat"
@@ -74,8 +97,8 @@
   (s-concat
    coq-commenter--proof-start-regex
    "\\([[:print:] \t\r\n]*\\)"
-   coq-commenter--proof-end-regex
-   ))
+   coq-commenter--proof-end-regex))
+
 (defconst coq-commenter--commenting-to-prefix
   (s-concat
    "\\1"
@@ -83,14 +106,13 @@
    "\\2"
    "\\3"
    coq-commenter--comment
-   "\n" (s-repeat 20 "*") ")\n"
-   ))
+   "\n" (s-repeat 20 "*") ")\n"))
+
 (defconst coq-commenter--commenting-to
   (s-concat
    coq-commenter--commenting-to-prefix
-   (s-repeat added-keyword-indent " ")
-   "Admitted."
-   ))
+   (s-repeat coq-commenter--added-keyword-indent " ")
+   "Admitted."))
 
 (defconst coq-commenter--uncommenting-from
   (s-concat
@@ -155,33 +177,33 @@
    nil t nil nil nil
    (- (car proofpos) 1) (cdr qedpos)))
 
-(defun coq-commenter-comment-proof-from-to (start end)
+(defun coq-commenter--comment-proof-from-to (start end)
   "Commenting proofs from START to END."
   (save-excursion
 	(let ((fullstr   (buffer-substring-no-properties (point-min) (point-max)))
 		  (str       (buffer-substring-no-properties start end)))
-      (cl-flet ((add-start-positions (pl start)
-                                     (--map
-                                      (cons (+ (car it) start)
-                                            (+ (cdr it) start)) pl)))
+      (cl-labels ((add-start-positions (pl start)
+                                       (--map
+                                        (cons (+ (car it) start)
+                                              (+ (cdr it) start)) pl)))
         (let ((comments    (s-matched-positions-all
                             "(\\*[[:print:] \t\r\n]*?\\*)"
                             fullstr))
               (proofstarts (add-start-positions
                             (s-matched-positions-all
-                             coq-comment--proof-start-regex
+                             coq-commenter--proof-start-regex
                              str)
                             start))
               (proofends   (add-start-positions
                             (s-matched-positions-all
-                             coq-comment--proof-end-regex
+                             coq-commenter--proof-end-regex
                              str)
                             start)))
-          (let ((proofs (coq-comment--find-proofs str comments proofstarts proofends)))
+          (let ((proofs (coq-commenter--find-proofs str comments proofstarts proofends)))
             (progn
               (setq proofs (reverse proofs))
-              (--map (coq-comment--comment-proof-at (car it)
-                                                    (cadr it)) proofs)))))))
+              (--map (coq-commenter--comment-proof-at (car it)
+                                                    (cadr it)) proofs))))))))
 
 (defun coq-commenter-comment-proof-in-region ()
   "Commenting proofs in the region."
@@ -212,8 +234,8 @@
 	(let ((windstart (window-start)))
 	  (progn
 		(perform-replace
-		 uncommenting-from
-		 uncommenting-to
+		 coq-commenter--uncommenting-from
+		 coq-commenter--uncommenting-to
 		 nil t nil nil nil
 		 start end)
 		(set-window-start (selected-window) windstart)))))
@@ -236,18 +258,33 @@
   (interactive)
   (coq-commenter--uncomment-proof-from-to (point-min) (point)))
 
-(defvar coq-commenter-mode-map
-  (let ((map (make-sparse-keymap)))
-    (cl-flet ((dfk (k f) (define-key map (kbd k) f)))
-      (dfk "C-c C-k ;" #'))))
+(defvar coq-commenter-mode-map (make-sparse-keymap))
 
 (define-minor-mode coq-commenter-mode
   "Commenting support mode for coq proof assistant."
   ;; mode line indicator
-  :lighter " coqcom"
-  ;; keymap
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c "))))
+  :lighter " CoqCom")
+
+(defvar coq-commenter--mode-menu nil
+  "Holds coq-commenter-mode menu.")
+
+(easy-menu-define coq-commenter--mode-menu
+  coq-commenter-mode-map
+  "Menu used when `coq-commenter-mode' is active."
+  '("CoqCom"
+    "----"
+    ["Comment proof in buffer" coq-commenter-comment-proof-in-buffer
+     :help "Comment proof in buffer"]
+    ["Comment proof to cursor" coq-commenter-comment-proof-to-cursor
+     :help "Comment proof to cursor"]
+    ["Comment proof in region" coq-commenter-comment-proof-in-region
+     :help "Comment proof in region"]
+    ["Uncomment proof in buffer" coq-commenter-uncomment-proof-in-buffer
+     :help "Uncomment proof in buffer"]
+    ["Uncomment proof to cursor" coq-commenter-uncomment-proof-to-cursor
+     :help "Uncomment proof to cursor"]
+    ["Uncomment proof in region" coq-commenter-uncomment-proof-in-region
+     :help "Uncomment proof in region"]))
 
 (provide 'coq-commenter)
 ;;; coq-commenter.el ends here

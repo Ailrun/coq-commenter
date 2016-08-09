@@ -21,7 +21,13 @@ Then, Copy `coq-commenter.el` to your `.emacs.d` directory (all any equivalent),
 (load "coq-commenter-path")
 ```
 
-where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` in.
+where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` in, and activate `coq-commenter-mode` on your target buffer.
+
+On the other way, when you use [ProofGeneral][ProofGeneral], you can automatically turn on this mode by hooking to coq-mode.
+
+```
+(add-hook 'coq-mode-hook (lambda () (coq-commenter-mode t)))
+```
 
 [s]: https://github.com/magnars/s.el
 [dash]: https://github.com/magnars/dash.el
@@ -43,6 +49,23 @@ where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` 
 
 ## Key setting ##
 
+You can add these key setting yourself with following elisp code. Because of emacs key binding convention, these keys are not package integrated.
+
+```
+  (define-key coq-commenter-mode-map
+              (kbd "C-;")
+              #'coq-commenter-comment-proof-in-region)
+  (define-key coq-commenter-mode-map
+              (kbd "C-x C-;")
+              #'coq-commenter-comment-proof-to-cursor)
+  (define-key coq-commenter-mode-map
+              (kbd "C-'")
+              #'coq-commenter-uncomment-proof-in-region)
+  (define-key coq-commenter-mode-map
+              (kbd "C-x C-'")
+              #'coq-commenter-uncomment-proof-in-buffer)
+```
+
 - C-; (Ctrl-;)
   - comment-proof-in-region
 - C-x C-; (Ctrl-x Ctrl-;)
@@ -51,31 +74,6 @@ where `"coq-commenter-path"` be the real path that you place `coq-commenter.el` 
   - uncomment-proof-in-region
 - C-x C-' (Ctrl-x Ctrl-')
   - uncomment-proof-in-buffer
-
-You can change these key by using
-`customize-group` `coq-commentor`
-
-or by modifying default values of `defcustom` from
-
-```
-;;
-;;
-;; Start of Key Setting
-;;
-;;
-```
-
-to
-
-```
-;;
-;;
-;; End of Key Setting
-;;
-;;
-```
-
-of `coq-commenter.el` file.
 
 ## Author ##
 
