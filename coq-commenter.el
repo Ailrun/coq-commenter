@@ -1,12 +1,11 @@
 ;;; coq-commenter.el --- Coq commenting minor mode for proof
 
-;; Version: 0.4.0
-;; Package-Version: 20160809.001
+;; Version: 0.4.1
 ;; Keywords: comment coq proof
 ;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; URL: http://github.com/ailrun/coq-commenter
-;; Package-Requires: ((dash "2.12.0") (s "1.11.0") (cl-lib "0.5"))
+;; Package-Requires: ((dash "2.13.0") (s "1.11.0") (cl-lib "0.5"))
 
 ;;; Commentary:
 
@@ -75,8 +74,16 @@
    "[[:digit:]]"
    "ic"))
 
+(defconst coq-commenter--proof-start-regex-part
+  "Proof\\(?:\\.\\| with .*\\.\\)\\|Obligation [0-9]*\\.\\|Next Obligation\\.")
+
 (defconst coq-commenter--proof-start-regex
-  "\\(Proof\\(?:\\.\\| with .*\\.\\)\\|Obligation [0-9]*\\.\\|Next Obligation\\.\\)")
+  (s-concat
+   "\\(^"
+   coq-commenter--proof-start-regex-part
+   "|[[:space:] .]*"
+   coq-commenter--proof-start-regex-part
+   "\\)"))
 
 (defconst coq-commenter--proof-end-regex
   "\\(Qed\\(?:\\.\\| exporting\\.\\)\\)")
